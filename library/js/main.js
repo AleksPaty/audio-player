@@ -126,6 +126,18 @@ const enterInProfile = (form) => {
         alert('Entered data are wrong!')
     }
 }
+const rendUserBooks = () => {
+    let ownBooksList = profileForm.querySelector('.rented-books_list')
+    if(currentUser.books.length) {
+        ownBooksList.innerText = '';
+        for(book of currentUser.books) {
+            let liItem = document.createElement('li')
+            liItem.innerText = `${book.bookName.toLowerCase()}, ${book.bookAuthor}`
+            liItem.classList.add('rented-books_name')
+            ownBooksList.prepend(liItem)
+        }
+    }
+}
 const doLogOut = () => {
     localStorage.removeItem('authorizedUser')
     location.reload()
@@ -144,16 +156,7 @@ if(isAuthorized) {
     profileForm.querySelector('.profile-form_footer_card').innerText = `${currentUser.cardNumber}`
     takeUserData(profileForm, currentUser)
 
-    let ownBooksList = profileForm.querySelector('.rented-books_list')
-    if(currentUser.books.length) {
-        if(ownBooksList.innerText.includes('Empty')) ownBooksList.innerText = '';
-        for(book of currentUser.books) {
-            let liItem = document.createElement('li')
-            liItem.innerText = `${book.bookName.toLowerCase()}, ${book.bookAuthor}`
-            liItem.classList.add('rented-books_name')
-            ownBooksList.prepend(liItem)
-        }
-    }
+    rendUserBooks()
 }
 if(isAuthorized) { 
     logOutBtn.addEventListener('click', doLogOut)
@@ -372,6 +375,8 @@ const addBookOnUser = (e) => {
     localStorage.setItem('authorizedUser', JSON.stringify(currentUser))
     e.target.setAttribute('disabled', '')
     e.target.innerText = 'Own'
+
+    rendUserBooks()
 }
 
 
